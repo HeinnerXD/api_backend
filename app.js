@@ -11,6 +11,13 @@ app.use(morgan('dev'));
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
+app.get('/', (req, res) => {
+    return res.status(200).send({
+        ok: true,
+        response: 'API TALLER'
+    });
+});
+
 app.use('/product', index_routing.products_routes);
 app.use('/user', index_routing.users_routes);
 
