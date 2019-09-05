@@ -9,6 +9,6 @@ server.listen(keys.port, (err, res)=>{
     if (err) {
         throw err;
     } else {
-        console.log('Server running on port');
+        console.log('Server running on port: ' + keys.port);
     }
 });
