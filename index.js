@@ -10,5 +10,6 @@ server.listen(process.env.PORT || keys.port, (err, res) => {
         throw err;
     } else {
         console.log('Server running on port: ' + keys.port);
+        require('./database/connection');
     }
 });
