@@ -4,21 +4,14 @@ const productsModel = require('../database/models/product');
 
 async function addProduct(req, res) {
     try {
-        var product = {
-            id: req.body.id,
-            name: req.body.id,
-            description: req.body.description,
-            pharmacy_id: req.body.pharmacy_id,
-            quantity: req.body.quantity
-        }
-        let exist = productsModel.findOne({id: product.id, pharmacy_id: product.pharmacy_id});
+        let exist = await productsModel.findOne({id: req.body.id, pharmacy_id: req.body.pharmacy_id});
         if (exist) {
             return res.status(400).send({
                 ok: false,
                 response: 'Product already registered in this pharmacy'
             });
         } else {
-            let productToSave = new productsModel(product);
+            let productToSave = new productsModel(req.body);
             productToSave.save((error, response)=>{
                 if (error) {
                     return res.status(400).send({

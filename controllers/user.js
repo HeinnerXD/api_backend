@@ -11,6 +11,8 @@ async function add_user(req, res) {
             phoneNumber: req.body.phoneNumber
         }
         let exist = await userModel.findOne({ email: user.email });
+        console.log(exist);
+        
         if (exist) {
             return res.status(400).send({
                 ok: false,
