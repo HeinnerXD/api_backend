@@ -1,26 +1,27 @@
 'use strict'
 
-const userModel = require('../../database/models/user');
+const productsModel = require('../database/models/product');
 
-async function add_user(req, res) {
+async function addProduct(req, res) {
     try {
-        var user = {
-            name: req.body.name,
-            email: req.body.email,
-            password: req.body.password,
-            phoneNumber: req.body.phoneNumber
+        var product = {
+            id: req.body.id,
+            name: req.body.id,
+            description: req.body.description,
+            pharmacy_id: req.body.pharmacy_id,
+            quantity: req.body.quantity
         }
-        let exist = await userModel.findOne({ email: user.email });
+        let exist = productsModel.findOne({id: product.id, pharmacy_id: product.pharmacy_id});
         if (exist) {
             return res.status(400).send({
                 ok: false,
-                response: 'Email already registered'
+                response: 'Product already registered in this pharmacy'
             });
         } else {
-            const userToAdd = new userModel(user);
-            await userToAdd.save((error, response) => {
+            let productToSave = new productsModel(product);
+            productToSave.save((error, response)=>{
                 if (error) {
-                    return res.status(500).send({
+                    return res.status(400).send({
                         ok: false,
                         error
                     });
@@ -33,7 +34,7 @@ async function add_user(req, res) {
                     } else {
                         return res.status(404).send({
                             ok: false,
-                            error: 'Cant resolve post...'
+                            response: 'Response not found'
                         });
                     }
                 }
@@ -47,4 +48,4 @@ async function add_user(req, res) {
     }
 }
 
-module.exports = { add_user }
+module.exports = { addProduct }

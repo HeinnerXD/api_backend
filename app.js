@@ -3,7 +3,8 @@
 const express = require('express');
 const app = express();
 const morgan = require('morgan');
-const index_routing = require('./routes/index_routing');
+const products_routes = require('./routes/products_routes');
+const users_routes = require('./routes/user_routes');
 const bodyParser = require('body-parser');
 
 app.use(morgan('dev'));
@@ -18,7 +19,7 @@ app.get('/', (req, res) => {
     });
 });
 
-app.use('/product', index_routing.products_routes);
-app.use('/user', index_routing.users_routes);
+app.use('/product', products_routes);
+app.use('/user', users_routes);
 
 module.exports = app;
