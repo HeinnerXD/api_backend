@@ -15,7 +15,7 @@ app.use(bodyParser.json());
 app.get('/', (req, res) => {
     return res.status(200).send({
         ok: true,
-        response: 'API TALLER'
+        response: 'API REST TALLER'
     });
 });
 

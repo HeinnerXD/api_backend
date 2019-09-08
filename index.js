@@ -5,7 +5,7 @@ const http = require('http');
 const keys = require('./keys');
 const server = http.createServer(app);
 
-server.listen(process.env.PORT || keys.port, (err, res) => {
+server.listen(process.env.PORT || keys.port, (err) => {
     if (err) {
         throw err;
     } else {
