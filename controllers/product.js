@@ -43,7 +43,32 @@ async function addProduct(req, res) {
 
 async function updateProduct(req, res) {
     try {
-        let productUpdated = await productsModel.findOneAndUpdate({ id: req.body.id }, req.body);
+        const products = await productsModel.find({ id: req.body.id });
+        if (!products) {
+            return res.status(404).send({
+                ok: false,
+                response: 'Product not found'
+            })
+        } else {
+            products.forEach(async product => {
+                await productsModel.findOneAndUpdate({ id: product.id, farmacia: product.farmacia }, req.body);
+            });
+            return res.status(200).send({
+                ok: true,
+                response: 'All products with id ' + req.body.id + ' updated'
+            });
+        }
+    } catch (error) {
+        return res.status(500).send({
+            ok: false,
+            error: 'Internal Server Error'
+        });
+    }
+}
+
+async function updateProductByPharmacy(req, res) {
+    try {
+        let productUpdated = await productsModel.findOneAndUpdate({ id: req.body.id, farmacia: req.body.farmacia }, req.body);
         if (!productUpdated) {
             return res.status(404).send({
                 ok: false,
@@ -64,6 +89,33 @@ async function updateProduct(req, res) {
 }
 
 async function deleteProduct(req, res) {
+    try {
+        const products = await productsModel.find({ id: req.body.id });
+        if (products.length === 0) {
+            return res.status(404).send({
+                ok: false,
+                response: 'Product not found'
+            })
+        } else {
+            products.forEach(async product => {
+                await productsModel.findOneAndDelete({ id: product.id, farmacia: product.farmacia }, req.body);
+            });
+            return res.status(200).send({
+                ok: true,
+                response: 'All products with id ' + req.body.id + ' deleted'
+            });
+        }
+    } catch (error) {
+        console.log(error);
+
+        return res.status(500).send({
+            ok: false,
+            error: 'Internal Server Error'
+        });
+    }
+}
+
+async function deleteProductByPharmacy(req, res) {
     try {
         let productDeleted = await productsModel.findOneAndDelete({ id: req.body.id, farmacia: req.body.farmacia });
         if (!productDeleted) {
@@ -87,4 +139,4 @@ async function deleteProduct(req, res) {
     }
 }
 
-module.exports = { addProduct, updateProduct, deleteProduct }
+module.exports = { addProduct, updateProduct, deleteProduct, updateProductByPharmacy, deleteProductByPharmacy }
