@@ -5,10 +5,11 @@ const mongoose = require('mongoose');
 
 const productSchema = new Schema({
     id: { type: Number, required: true },
-    name: { type: String, required: true },
-    pharmacy_id: { type: Number, required: true },
-    quantity: { type: Number, require: true },
-    description: { type: String }
+    nombre: { type: String, required: true },
+    farmacia: { type: Number, required: true },
+    cantidad: { type: Number, require: true },
+    descripcion: { type: String },
+    precio: { type: Number, required: true }
 });
 
 module.exports = mongoose.model("products", productSchema);

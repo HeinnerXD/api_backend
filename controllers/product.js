@@ -4,7 +4,7 @@ const productsModel = require('../database/models/product');
 
 async function addProduct(req, res) {
     try {
-        let exist = await productsModel.findOne({ id: req.body.id, pharmacy_id: req.body.pharmacy_id });
+        let exist = await productsModel.findOne({ id: req.body.id, farmacia: req.body.farmacia });
         if (exist) {
             return res.status(400).send({
                 ok: false,
@@ -65,7 +65,7 @@ async function updateProduct(req, res) {
 
 async function deleteProduct(req, res) {
     try {
-        let productDeleted = await productsModel.findOneAndDelete({ id: req.body.id, pharmacy_id: req.body.pharmacy_id });
+        let productDeleted = await productsModel.findOneAndDelete({ id: req.body.id, farmacia: req.body.farmacia });
         if (!productDeleted) {
             return res.status(404).send({
                 ok: false,
