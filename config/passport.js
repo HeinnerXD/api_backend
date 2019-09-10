@@ -17,7 +17,7 @@ passport.deserializeUser((id, done) => {
 passport.use(new localStrategy(
     { usernamefield: 'email' },
     (email, password, done) => {
-        Usuario.findOne({ email }, (err, usuario) => {
+        Usuario.findOne({email}, (err, usuario) => {
             if (!usuario) {
                 return done(null, false, { message: `Este email : ${email} no esta registrado` });
             } else {
