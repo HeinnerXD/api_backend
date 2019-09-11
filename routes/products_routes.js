@@ -3,6 +3,12 @@
 const router = require('express').Router();
 const productController = require('../controllers/product')
 
+router.get('/', (req, res) => {
+    return res.status(200).send({
+        ok: true,
+        response: 'Here starts de products CRUD, go ahead'
+    });
+});
 router.get('/get/one/:id?/:pharmacy?', productController.getProduct);
 router.get('/get/all', productController.getAllProducts);
 router.get('/get/by_pharmacy/:pharmacy?', productController.getProductsByPharmacy);
