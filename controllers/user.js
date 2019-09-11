@@ -1,52 +1,52 @@
-'use strict'
+const passport = require('passport');
+const Usuario = require('../models/user');
 
-const userModel = require('../database/models/user');
+exports.postSigup = (req, res, next) => {
+    const nuevoUsuario = new Usuario({
+        email: req.body.email,
+        name: req.body.name,
+        password: req.body.password,
+        phoneNumber: req.body.phoneNumber
+    });
 
-async function add_user(req, res) {
-    try {
-        var user = {
-            name: req.body.name,
-            email: req.body.email,
-            password: req.body.password,
-            phoneNumber: req.body.phoneNumber
+    Usuario.findOne({ email: req.body.email }, (err, usuarioExistente) => {
+        if (usuarioExistente) {
+            return res.status(400).send('Ya ese email esta registrado');
+
         }
-        let exist = await userModel.findOne({ email: user.email });
-        console.log(exist);
-        
-        if (exist) {
-            return res.status(400).send({
-                ok: false,
-                response: 'Email already registered'
-            });
-        } else {
-            const userToAdd = new userModel(user);
-            await userToAdd.save((error, response) => {
-                if (error) {
-                    return res.status(500).send({
-                        ok: false,
-                        error
-                    });
-                } else {
-                    if (response) {
-                        return res.status(200).send({
-                            ok: true,
-                            response
-                        });
-                    } else {
-                        return res.status(404).send({
-                            ok: false,
-                            error: 'Cant resolve post...'
-                        });
-                    }
+
+        nuevoUsuario.save((err) => {
+            if (err) {
+                next(err);
+            }
+            req.logIn(nuevoUsuario, (err) => {
+                if (err) {
+                    next(err);
                 }
-            });
-        }
-    } catch (error) {
-        return res.status(500).send({
-            ok: false,
-            error
-        });
-    }
+                res.send('Usuario creado exitosamente');
+            })
+        })
+    })
 }
 
-module.exports = { add_user }
+exports.postLogin = (req, res, next) => {
+    passport.authenticate('local', (err, usuario, info) => {
+        if (err) {
+            next(err);
+        }
+        if (!usuario) {
+            return res.status(400).send('Email o contraseña no validos');
+        }
+        req.logIn(usuario, (err) => {
+            if (err) {
+                next(err);
+            }
+            res.send('Login Exitoso');
+        })
+    })(req, res, next);
+}
+
+exports.logout = (req, res) => {
+    req.logout();
+    res.send('Logout exitoso');
+}
