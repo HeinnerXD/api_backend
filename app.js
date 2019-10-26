@@ -5,24 +5,15 @@ const session = require('express-session');
 const app = express();
 const morgan = require('morgan');
 const products_routes = require('./routes/products_routes');
+const keys = require('./keys');
+
+
 const users_routes = require('./routes/user_routes');
 const bodyParser = require('body-parser');
-
-const mongoose = require('mongoose');
 const passport = require('passport');
-const passportConfig = require('./config/passport');
+//const passportConfig = require('./config/passport');
 
 const MongoStore = require('connect-mongo')(session);
-const moungo_url = 'mongodb://127.0.0.1:27017/auth';
-
-mongoose.Promise = global.Promise;
-mongoose.connect(moungo_url);
-mongoose.connection.on('error', (err) => {
-    throw err;
-    process.exit(1);
-})
-
-
 
 app.use(morgan('dev'));
 
@@ -30,12 +21,16 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
 
-app.use(session({
+
+
+
+
+app.use( session({
     secret: 'Esto es segreto',
     resave: true,
     saveUninitialized: true,
     store: new MongoStore({
-        url: moungo_url,
+        url: keys.mongo_connection,
         autoReconnect: true
     })
 
@@ -57,14 +52,6 @@ app.use(bodyParser.urlencoded({ extended: true }));
     });
 });
 */
-const controllersUsuario = require('./controllers/usuario');
-app.post('/signup', controllersUsuario.postSigup);
-app.post('/login', controllersUsuario.postLogin);
-app.get('/logout', passportConfig.estaAutenticado, controllersUsuario.logout);
-
-app.get('/usuarioInfo', passportConfig.estaAutenticado, (req, res) => {
-    res.json(req.user);
-})
 
 app.use('/product', products_routes);
 app.use('/user', users_routes);
