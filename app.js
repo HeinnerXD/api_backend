@@ -7,7 +7,7 @@ const morgan = require('morgan');
 const products_routes = require('./routes/products_routes');
 const keys = require('./keys');
 
-
+const passport = require('passport');
 const users_routes = require('./routes/user_routes');
 const bodyParser = require('body-parser'); 
 

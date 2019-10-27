@@ -13,13 +13,7 @@
   "dependencies": {
     "bcrypt-nodejs": "0.0.3",
     "body-parser": "^1.19.0",
-<<<<<<< HEAD
-    "connect-flash": "^0.1.1",
-    "connect-mongo": "^3.0.0",
-    "cookie-parser": "^1.4.4",
-=======
-    "cors": "^2.8.5",
->>>>>>> e65697dceeb4e1d863115473bf64be1b33030861
+    "connect-mongo": "^3.1.0",
     "express": "^4.17.1",
     "express-session": "^1.16.2",
     "mongo": "^0.1.0",
