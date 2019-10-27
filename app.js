@@ -6,15 +6,20 @@ const app = express();
 const morgan = require('morgan');
 const products_routes = require('./routes/products_routes');
 const keys = require('./keys');
+const staff_routes = require('./routes/staff_routes');
+const bodyParser = require('body-parser');
+
+const MongoStore = require('connect-mongo')(session); 
+
 
 const passport = require('passport');
 const users_routes = require('./routes/user_routes');
-const bodyParser = require('body-parser'); 
 
 
 
 
-const MongoStore = require('connect-mongo')(session); 
+
+
 
 
 
@@ -52,5 +57,7 @@ app.use(bodyParser.urlencoded({
 
 app.use('/product', products_routes);
 app.use('/user', users_routes);
+app.use('/staff', staff_routes);
+
 
 module.exports = app;
