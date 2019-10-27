@@ -5,6 +5,7 @@ const app = express();
 const morgan = require('morgan');
 const products_routes = require('./routes/products_routes');
 const users_routes = require('./routes/user_routes');
+const staff_routes = require('./routes/staff_routes');
 const bodyParser = require('body-parser');
 const cors = require('cors');
 
@@ -24,5 +25,7 @@ app.get('/', (req, res) => {
 
 app.use('/product', products_routes);
 app.use('/user', users_routes);
+app.use('/staff', staff_routes);
+
 
 module.exports = app;
