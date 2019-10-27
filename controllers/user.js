@@ -16,7 +16,7 @@ exports.postSigup = (req, res, next) => {
         if (usuarioExistente) {
             return res.status(400).send({
                 ok: false,
-                response: req.body.email + 'ya ese email esta registrado'
+                response: req.body.email + ':_ya ese email esta registrado'
             });
         }
 
@@ -40,21 +40,28 @@ exports.postSigup = (req, res, next) => {
 
 exports.postLogin = async (req, res, next)  => {
     
-            passport.authenticate('local', (err, usuario, info) => {
+            passport.authenticate('local-signin', (err, usuario, info) => {
              
                 if (err) {
                     next(err);
                 }
 
-                //if (!usuario) {
-                  // return res.status(400).send('Email o contraseña no validos');
-                //}
+                if (!usuario) {
+                   return res.status(400).send( {
+                    ok: false,
+                    response: 'Email o contraseña invalidas'
+                });
+                }
                 
                 req.logIn(usuario, (err) => {
                     if (err) {
                         next(err);
                     }
-                    res.send('Login Exitoso');
+
+                    res.status(200).send({
+                        ok: true,
+                        response: 'login exitoso'
+                    });
                 })
             })(req, res, next);
             
@@ -68,5 +75,8 @@ exports.postLogin = async (req, res, next)  => {
 
 exports.logout = (req, res) => {
     req.logout();
-    res.send('Logout exitoso');
+    res.status(200).send({
+        ok: true,
+        response: 'Logout exitoso'
+    });
 }

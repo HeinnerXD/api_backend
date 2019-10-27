@@ -11,7 +11,7 @@ router.post('/login', user_controller.postLogin);
 
 router.get('/logout', passportConfig.estaAutenticado, user_controller.logout);
 
-router.get('/usuarioInfo', passportConfig.estaAutenticado, (req, res) => {
+router.get('/userInfo', passportConfig.estaAutenticado, (req, res) => {
     res.json(req.user);
 })
 

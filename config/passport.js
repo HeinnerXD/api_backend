@@ -3,50 +3,54 @@ const passport = require('passport');
 const LocalStrategy = require('passport-local').Strategy;
 const User = require('../database/models/user');
 
-
 passport.serializeUser((user, done) => {
     done(null, user.id);
+});
 
-})
-passport.deserializeUser((id, done) => {
-    Usuario.findById(id, (err, user) => {
-        done(err, user);
-
-    })
-})
+passport.deserializeUser(async (id, done) => {
+    const user = await User.findById(id);
+    done(null, user);
+});
 
 
 
 
-passport.use(new LocalStrategy({ usernamefield: 'email', passwordField: 'password' },(email, password, done) => {
-        User.findOne({email, password }, (err, user) => {
-            if (!user) {
-                return done(null, false, {
-                    message: `Este email : ${email} no esta registrado`
-                });
-            } else {
-                
-                User.comparePassword(password, (err, sonIguales) => {
-                    if (sonIguales) {
-                        return done(null, user);
 
 
-
-
-                    } else {
-                        return done(null, false, {
-                            message: 'La contraseña no es validad'
-                        });
-                    }
-                })
-            }
-        })
+passport.use('local-signin', new LocalStrategy({
+    usernameField: 'email',
+    passwordField: 'password',
+    passReqToCallback: true
+}, async (req, email, password, done) => {
+    const user = await User.findOne({
+        email: email
+    });
+    if (!user) {
+        return done(null, false, {message: `Este email: ${email} no esta registrado`}), res.status(400).send({
+            ok: false,
+            response:  `Este email: ${email} no esta registrado`
+        }) ;
     }
-))
+
+    if (!user.comparePassword(password)) {
+        return done(null, false, {message: `Error de contraseña`}), res.status(400).send({
+            ok: false,
+            response: 'contraseña incorrecta'
+        });
+    }
+    return done(null, user);
+}));
+
+
+
+
 
 exports.estaAutenticado = (req, res, next) => {
     if (req.isAuthenticated()) {
         return next();
     }
-    res.status(401).send('Tiene que hace login para acceder ha este recurso');
+    res.status(401).send({
+        ok: false,
+        response:'Tiene que estar autenticado para acceder ha este recurso'
+    });
 }
