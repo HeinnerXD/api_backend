@@ -4,7 +4,7 @@ const productsModel = require('../database/models/product');
 
 async function addProduct(req, res) {
     try {
-        if (req.body.id && req.body.nombre && req.body.farmacia && req.body.cantidad && req.body.precio) {
+        if (req.body.id && req.body.nombre && req.body.farmacia && req.body.cantidad && req.body.precio && req.body.imagen) {
             let exist = await productsModel.findOne({ id: req.body.id, farmacia: req.body.farmacia });
             if (exist) {
                 return res.status(400).send({
