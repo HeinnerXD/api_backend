@@ -8,7 +8,7 @@ const staffSchema = new Schema({
     nombre: { type: String, required: true },
     telefono: {type: Number, required: true},
     farmacia: { type: Number, required: true },
-    cargo: { type: String, require: true }
+    cargo: { type: String, required: true }
 });
 
 module.exports = mongoose.model("staff", staffSchema);

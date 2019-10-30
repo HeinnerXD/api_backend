@@ -6,7 +6,8 @@ const usuarioSchema = new Schema({
     email: { type: String, unique: true, lowercase: true, required: true },
     password: { type: String, required: true },
     name: { type: String, required: true },
-    phoneNumber: { type: String, required: true }
+    phoneNumber: { type: String, required: true },
+    pedidos: {type: Array}
 
 }, {
     timestamps: true
@@ -32,8 +33,8 @@ usuarioSchema.pre('save', function (next) {
     })
 })
 
-usuarioSchema.methods.comparePassword= function (password) {
+usuarioSchema.methods.comparePassword = function (password) {
     return bcrypt.compareSync(password, this.password);
-  };
+};
 
 module.exports = mongoose.model('users', usuarioSchema);

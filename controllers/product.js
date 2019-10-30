@@ -1,6 +1,8 @@
 'use strict'
 
 const productsModel = require('../database/models/product');
+const userModel = require('../database/models/user');
+const pharmacyModel = require('../database/models/pharmacy');
 
 async function addProduct(req, res) {
     try {
@@ -288,6 +290,47 @@ async function getProduct(req, res) {
     }
 }
 
+async function buyProduct(req, res) {
+    try {
+        let pharmacy = await pharmacyModel.findOne({ codigo: req.body.farmacia_id });
+        let product = await productsModel.findOne({ id: req.body.product_id });
+        let user = await userModel.findOne({ email: req.body.email });
+        if (product && pharmacy && user) {
+            let arrayPedido = {
+                product: {
+                    nombre: product.nombre,
+                    cantidad_comprada: req.body.cantidad,
+                    precio: product.precio,
+                },
+                farmacia: {
+                    nombre: pharmacy.nombre,
+                    latitud: pharmacy.localizacion.latitud,
+                    longitud: pharmacy.localizacion.longitud
+                }
+            }
+            let userUpdated = await user.update({$push:{pedidos: arrayPedido}});
+            if (userUpdated) {
+                return res.status(200).send({
+                    ok: true,
+                    response: 'Pedido agregado al usuario',
+                    usuario: user
+                });
+            }
+        } else {
+            return res.status(400).json({
+                ok: false,
+                error: 'Cant find product or pharmacy'
+            });
+        }
+    } catch (error) {
+        console.log(error);
+        return res.status(500).json({
+            ok: false,
+            error: error
+        });
+    }
+}
+
 module.exports = {
     addProduct,
     updateProduct,
@@ -297,5 +340,6 @@ module.exports = {
     getProduct,
     getAllProducts,
     getProductsByPharmacy,
-    getProductsById
+    getProductsById,
+    buyProduct
 }

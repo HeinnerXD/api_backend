@@ -18,5 +18,6 @@ router.put('/update', productController.updateProduct);
 router.put('/update/by_pharmacy', productController.updateProductByPharmacy);
 router.delete('/delete', productController.deleteProduct);
 router.delete('/delete/by_pharmacy', productController.deleteProductByPharmacy);
+router.post('/buy', productController.buyProduct);
 
 module.exports = router;
