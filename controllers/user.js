@@ -45,7 +45,8 @@ exports.postLogin = async (req, res, next) => {
         if (!usuario) {
             return res.status(400).send({
                 ok: false,
-                response: 'Email o contraseña invalidas'
+                response: 'Email o contraseña invalidas',
+                user: {}
             });
         }
         req.logIn(usuario, (err) => {
